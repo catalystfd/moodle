@@ -2700,8 +2700,10 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(2, $result['courses']);
 
         // Check default filters.
-        $this->assertCount(6, $result['courses'][0]['filters']);
-        $this->assertCount(6, $result['courses'][1]['filters']);
+        $expected_filters_1 = filter_get_available_in_context(context_course::instanced($course1->id));
+        $expected_filters_2 = filter_get_available_in_context(context_course::instanced($course1->id));
+        $this->assertCount(count($expected_filters_1), $result['courses'][0]['filters']);
+        $this->assertCount(count($expected_filters_2), $result['courses'][1]['filters']);
 
         $result = core_course_external::get_courses_by_field('category', $category1->id);
         $result = external_api::clean_returnvalue(core_course_external::get_courses_by_field_returns(), $result);
@@ -2742,8 +2744,9 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(34, $result['courses'][0]);
 
         // Check default filters.
+        $expected_filters_1 = filter_get_available_in_context(context_course::instanced($course1->id));
         $filters = $result['courses'][0]['filters'];
-        $this->assertCount(6, $filters);
+        $this->assertCount(count($expected_filters_1), $filters);
         $found = false;
         foreach ($filters as $filter) {
             if ($filter['filter'] == 'mediaplugin' and $filter['localstate'] == TEXTFILTER_OFF) {
